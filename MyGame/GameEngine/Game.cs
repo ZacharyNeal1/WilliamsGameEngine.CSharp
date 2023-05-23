@@ -45,7 +45,7 @@ namespace GameEngine
             _initialized = true;
 
             // Create the render window.
-            _window = new RenderWindow(new VideoMode(windowWidth, windowHeight), windowTitle);
+            _window = new RenderWindow(new VideoMode(windowWidth, windowHeight), windowTitle, Styles.Fullscreen);
             _window.SetFramerateLimit(FramesPerSecond);
 
             // Add a method to be called whenever the "Closed" event fires.
