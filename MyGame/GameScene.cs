@@ -19,10 +19,21 @@ namespace MyGame
     class GameScene : Scene
     {
         public bool shield = false;
+        // -1 equals the points are returning, 0 equals false/disabled, 1 equals true/enabled
+        public int shipEnable = 0;
         public GameScene()
         {
             AddGameObject(new Ship());
             AddGameObject(new metorSpawner());
+        }
+        public int vaporCount()
+        {
+            int a = 0;
+            foreach(GameObject e in GetObjs())
+            {
+                if (e.HasTag("partv") || e.HasTag("partvi")) a++;
+            }
+            return a;
         }
     }
 }

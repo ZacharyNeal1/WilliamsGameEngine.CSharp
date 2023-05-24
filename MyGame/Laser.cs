@@ -47,7 +47,7 @@ namespace MyGame
 
 
                 scene.AddGameObject(v1);
-                scene.AddGameObject(new LineC(new Vector2(pos.X,pos.Y), pos, Color.Green, "laser", this));
+                scene.AddGameObject(new LineC(new Vector2(pos.X,pos.Y), pos, Color.Green, "laser", this, 3));
                 float x = Speed * MathF.Cos((float)(_sprite.Rotation * (Math.PI / 180.0f)));
                 float y = Speed * MathF.Sin((float)(_sprite.Rotation * (Math.PI / 180.0f)));
                 if (_timeBeforeFollow-- < 0)

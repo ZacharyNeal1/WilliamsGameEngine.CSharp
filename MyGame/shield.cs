@@ -53,7 +53,6 @@ namespace MyGame
             pos[3] = CirPos(pos[3], _sprit.Rotation, 150,  _sprit.Origin,scale);
             pos[4] = CirPos(pos[4], _sprit.Rotation, 210, _sprit.Origin,scale);
             pos[5] = CirPos(pos[5], _sprit.Rotation, 270,  _sprit.Origin,scale);
-            scene.AddGameObject(new LineC(new Vector2(_sprit.Origin.X, _sprit.Origin.Y), new Vector2(100, 100), Color.Blue));
             foreach (Vector2 e in pos)
             scene.AddGameObject(new LineC(e, pos[Find(e, pos)], Color.Red, "shield", this, 3));
         }

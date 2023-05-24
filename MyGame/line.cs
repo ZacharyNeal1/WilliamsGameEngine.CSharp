@@ -23,7 +23,7 @@ namespace MyGame
         private const int secondLineWidth = 21, secondLineAlpha = 64;
         //second line width is made to be a uneven number so you have have a equal amout of pixels
         // on ethier side of the first line
-        public LineC(Vector2 a, Vector2 b, Color c, string tag = "", GameObject parent = null, int line = 1, bool col = true)
+        public LineC(Vector2 a, Vector2 b, Color c, string tag = "", GameObject parent = null, int line = 1, int col = 1)
         {
             float distance = line + (float)Math.Sqrt(Math.Abs(Math.Pow((b.X - a.X), 2) + Math.Pow((b.Y - a.Y), 2)));
             AssignTag(tag);
@@ -38,14 +38,15 @@ namespace MyGame
             _sprite.Rotation = (float)-(MathF.Atan2(b.X - a.X, b.Y - a.Y) * (180 / MathF.PI));
             _sprite.Color = new Color(c.R, c.G, c.B, 255);
 
+
             _sprite2.TextureRect = (IntRect)new FloatRect(new Vector2f(a.X, a.Y), new Vector2f(secondLineWidth, distance));
             _sprite2.Origin = new Vector2f(_sprite2.TextureRect.Width / 2, 0);
             _sprite2.Texture = Game.GetTexture("Resources/pixel.png");
             _sprite2.Position = new Vector2f(a.X, a.Y);
             _sprite2.Rotation = (float)-(MathF.Atan2(b.X - a.X, b.Y - a.Y) * (180 / MathF.PI));
             _sprite2.Color = new Color(c.R, c.G, c.B, secondLineAlpha);
-            //Console.WriteLine(distance + "dist");
-            if (col == true)
+            if (tag == "laser") _sprite.Scale = new Vector2f(2,2);
+            if (col == 1)
             SetCollisionCheckEnabled(true);
         }
 
@@ -61,7 +62,7 @@ namespace MyGame
         }
         public override FloatRect GetCollisionRect()
         {
-            return _sprite2.GetGlobalBounds();
+            return _sprite.GetGlobalBounds();
         }
         public override void HandleCollision(GameObject otherGameObject)
         {
@@ -81,7 +82,18 @@ namespace MyGame
                 LineC a = (LineC)otherGameObject;
                 a.parent.MakeDead();
             }
+            if (HasTag("partvi") && otherGameObject.HasTag("ship"))
+            {
+                GameScene scene = (GameScene)Game.CurrentScene;
+                parent.MakeDead();
 
+                scene.shipEnable = 1;
+            }
+            if (HasTag("partv") && otherGameObject.HasTag("ship"))
+            {
+                GameScene scene = (GameScene)Game.CurrentScene;
+                parent.MakeDead();
+            }
         }
     }
 

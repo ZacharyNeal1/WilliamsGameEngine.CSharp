@@ -6,11 +6,15 @@ using SFML.System;
 namespace GameEngine
 {
     // The Scene manages all the GameObjects currently in the game.
-    class Scene
+    public class Scene
     {
         // This holds our game objects.
-        private readonly List<GameObject> _gameObjects = new List<GameObject>();
+        readonly List<GameObject> _gameObjects = new List<GameObject>();
 
+        public List<GameObject> GetObjs()
+        {
+            return _gameObjects;
+        }
         // Puts a GameObject into the scene.
         public void AddGameObject(GameObject gameObject)
         {

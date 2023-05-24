@@ -60,7 +60,6 @@ namespace MyGame
             pos[3] = CirPos(pos[3], _sprit.Rotation, 90,scale, _sprit.Origin);
             pos[4] = CirPos(pos[4], _sprit.Rotation , -90,scale , _sprit.Origin);
             pos[5] = CirPos(pos[5], _sprit.Rotation, 0,0, _sprit.Origin);
-            scene.AddGameObject(new LineC(new Vector2(_sprit.Origin.X, _sprit.Origin.Y), new Vector2(100,100), Color.Blue));
             foreach (Vector2 e in pos)
             scene.AddGameObject(new LineC(e, pos[Find(e, pos)], Color.Red, "meteor", this));
             if ((a.X > b.X || a.X < 1 || a.Y > b.X || a.Y < 1) && toPlayer == true)
