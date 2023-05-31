@@ -15,6 +15,11 @@ namespace MyGame
             return new Vector2(e.X ,e.Y);
 
         }
+        public static Vector2 ToVect2(Vector2u e)
+        {
+            return new Vector2(e.X, e.Y);
+
+        }
         public static Vector2f ToVect2f(Vector2 e)
         {
             return new Vector2f(e.X, e.Y);

@@ -21,10 +21,15 @@ namespace MyGame
         public bool shield = false;
         // -1 equals the points are returning, 0 equals false/disabled, 1 equals true/enabled
         public int shipEnable = 0;
+        public int shieldPower = 255;
+        public int scorei = 0;
+        public int addedScore = 0;
         public GameScene()
         {
             AddGameObject(new Ship());
             AddGameObject(new metorSpawner());
+
+            AddGameObject(new Score());
         }
         public int vaporCount()
         {

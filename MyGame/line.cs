@@ -20,10 +20,10 @@ namespace MyGame
         private readonly Sprite _sprite2 = new Sprite();
         private GameObject parent;
         private int stay = 1;
-        private const int secondLineWidth = 21, secondLineAlpha = 64;
+        private int secondLineWidth = 21, secondLineAlpha = 64;
         //second line width is made to be a uneven number so you have have a equal amout of pixels
         // on ethier side of the first line
-        public LineC(Vector2 a, Vector2 b, Color c, string tag = "", GameObject parent = null, int line = 1, int col = 1)
+        public LineC(Vector2 a, Vector2 b, Color c, string tag = "", GameObject parent = null, int line = 1)
         {
             float distance = line + (float)Math.Sqrt(Math.Abs(Math.Pow((b.X - a.X), 2) + Math.Pow((b.Y - a.Y), 2)));
             AssignTag(tag);
@@ -39,20 +39,23 @@ namespace MyGame
             _sprite.Color = new Color(c.R, c.G, c.B, 255);
 
 
+            if (HasTag("scoreText")) secondLineWidth /= 2;
+            if (HasTag("meteor2")) secondLineWidth /= 2;
             _sprite2.TextureRect = (IntRect)new FloatRect(new Vector2f(a.X, a.Y), new Vector2f(secondLineWidth, distance));
             _sprite2.Origin = new Vector2f(_sprite2.TextureRect.Width / 2, 0);
             _sprite2.Texture = Game.GetTexture("Resources/pixel.png");
             _sprite2.Position = new Vector2f(a.X, a.Y);
             _sprite2.Rotation = (float)-(MathF.Atan2(b.X - a.X, b.Y - a.Y) * (180 / MathF.PI));
-            _sprite2.Color = new Color(c.R, c.G, c.B, secondLineAlpha);
+            _sprite2.Color = new Color(c.R, c.G, c.B, (byte)secondLineAlpha);
             if (tag == "laser") _sprite.Scale = new Vector2f(2,2);
-            if (col == 1)
+
             SetCollisionCheckEnabled(true);
         }
 
         public override void Draw()
-        {
+        { 
             Game.RenderWindow.Draw(_sprite);
+
             Game.RenderWindow.Draw(_sprite2);
         }
 
@@ -73,14 +76,28 @@ namespace MyGame
             }
             if (otherGameObject.HasTag("ship") && HasTag("meteor"))
             {
-                LineC a = (LineC)otherGameObject;
-                parent.MakeDead();
+                GameScene scene = (GameScene)Game.CurrentScene;
+                if (scene.shipEnable != 0) parent.MakeDead(); else scene.addedScore += 10;
             }
             if (otherGameObject.HasTag("meteor") && HasTag("laser"))
             {
-                parent.MakeDead();
                 LineC a = (LineC)otherGameObject;
+                var scene = (GameScene)Game.CurrentScene;
+                if (!parent.IsDead() && !a.parent.IsDead())
+                    scene.addedScore += 1000;
+                parent.MakeDead();
                 a.parent.MakeDead();
+
+            }
+            if (otherGameObject.HasTag("meteor2") && HasTag("laser"))
+            {
+                LineC a = (LineC)otherGameObject;
+                var scene = (GameScene)Game.CurrentScene;
+                if (!parent.IsDead() && !a.parent.IsDead())
+                    scene.addedScore += 10000;
+                parent.MakeDead();
+                a.parent.MakeDead();
+
             }
             if (HasTag("partvi") && otherGameObject.HasTag("ship"))
             {
@@ -91,7 +108,6 @@ namespace MyGame
             }
             if (HasTag("partv") && otherGameObject.HasTag("ship"))
             {
-                GameScene scene = (GameScene)Game.CurrentScene;
                 parent.MakeDead();
             }
         }

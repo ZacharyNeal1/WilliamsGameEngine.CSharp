@@ -41,20 +41,23 @@ namespace MyGame
         }
         public override void Update(Time elapsed)
         {
-            
-            _sprit.Origin = new Vector2f (Ship.GetPos().X, Ship.GetPos().Y);
-            var a = _sprit.Position;
-            var b = Game.RenderWindow.Size;
-            if (scene.shield == false) MakeDead();
-            _sprit.Rotation += 0.05f;
-            pos[0] = CirPos(pos[0], _sprit.Rotation, -30,  _sprit.Origin, scale);
-            pos[1] = CirPos(pos[1], _sprit.Rotation, 30,  _sprit.Origin,scale);
-            pos[2] = CirPos(pos[2], _sprit.Rotation, 90,  _sprit.Origin,scale);
-            pos[3] = CirPos(pos[3], _sprit.Rotation, 150,  _sprit.Origin,scale);
-            pos[4] = CirPos(pos[4], _sprit.Rotation, 210, _sprit.Origin,scale);
-            pos[5] = CirPos(pos[5], _sprit.Rotation, 270,  _sprit.Origin,scale);
-            foreach (Vector2 e in pos)
-            scene.AddGameObject(new LineC(e, pos[Find(e, pos)], Color.Red, "shield", this, 3));
+            if (scene.shieldPower > 2)
+            {
+                _sprit.Origin = new Vector2f(Ship.GetPos().X, Ship.GetPos().Y);
+                var a = _sprit.Position;
+                var b = Game.RenderWindow.Size;
+                if (scene.shield == false) MakeDead();
+                _sprit.Rotation += 0.05f;
+                pos[0] = CirPos(pos[0], _sprit.Rotation, -30, _sprit.Origin, scale);
+                pos[1] = CirPos(pos[1], _sprit.Rotation, 30, _sprit.Origin, scale);
+                pos[2] = CirPos(pos[2], _sprit.Rotation, 90, _sprit.Origin, scale);
+                pos[3] = CirPos(pos[3], _sprit.Rotation, 150, _sprit.Origin, scale);
+                pos[4] = CirPos(pos[4], _sprit.Rotation, 210, _sprit.Origin, scale);
+                pos[5] = CirPos(pos[5], _sprit.Rotation, 270, _sprit.Origin, scale);
+                var color = new SFML.Graphics.Color(0, 0, (byte)scene.shieldPower);
+                foreach (Vector2 e in pos)
+                    scene.AddGameObject(new LineC(e, pos[Find(e, pos)], color, "shield", this, 3));
+            }
         }
         static int Find(Vector2 e, Vector2[] pos)
         {

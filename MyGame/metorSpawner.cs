@@ -22,6 +22,8 @@ namespace MyGame
                 timer = (int)delay;
                 Vector2u size = Game.RenderWindow.Size;
                 Game.CurrentScene.AddGameObject(new Metor());
+                Game.CurrentScene.AddGameObject(new Metor1());
+                Game.CurrentScene.AddGameObject(new Metor2());
             }
         }
     }

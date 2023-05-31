@@ -82,12 +82,12 @@ namespace MyGame
 
             var a = _sprit.Origin;
 
-            //makes sure the particles dont go off scree
+            //makes sure the particles dont go off screen
             var orgin = _sprit.Origin;
-            if (orgin.X < -50) orgin.X = Game.RenderWindow.Size.X;
-            if (orgin.X > Game.RenderWindow.Size.X + 100) orgin.X = 0;
-            if (orgin.Y < -50) orgin.Y = Game.RenderWindow.Size.Y;
-            if (orgin.Y > Game.RenderWindow.Size.Y + 100) orgin.Y = 0;
+            if (_sprit.Origin.X < -50) _sprit.Origin = new Vector2f(Game.RenderWindow.Size.X, _sprit.Origin.Y);
+            if (_sprit.Origin.X > Game.RenderWindow.Size.X) _sprit.Origin = new Vector2f(0, _sprit.Origin.Y);
+            if (_sprit.Origin.Y < -50) _sprit.Origin = new Vector2f(_sprit.Origin.X, Game.RenderWindow.Size.Y);
+            if (_sprit.Origin.Y > Game.RenderWindow.Size.Y) _sprit.Origin = new Vector2f(_sprit.Origin.X, 0);
 
             //copies the velocity of the ship
             if (forces != null) foreach (Vector2 e in forces)
@@ -149,8 +149,7 @@ namespace MyGame
             _sprit.Color,
             tag,
             this,
-            3,
-            1
+            3
             ));
 
         }
