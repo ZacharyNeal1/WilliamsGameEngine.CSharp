@@ -21,9 +21,9 @@ namespace MyGame
         private readonly Sprite _sprite = new Sprite();
         GameScene scene = (GameScene)Game.CurrentScene;
 
-        public Laser(Vector2f pos, float rot)
+        public Laser(Vector2 pos, float rot)
         {
-            _sprite.Origin = pos;
+            _sprite.Origin = Conv.ToVect2f(pos);
             _sprite.Rotation = rot;
         }
 

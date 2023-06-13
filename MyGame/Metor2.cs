@@ -22,7 +22,7 @@ namespace MyGame
         int rot = 1;
         private readonly Sprite _sprit = new Sprite();
         private bool toPlayer = false;
-        const int scale = 17;
+        const int scale = 10;
         GameScene scene = (GameScene)Game.CurrentScene;
         Vector2[] pos =
         {
@@ -60,7 +60,7 @@ namespace MyGame
                 col = new Color(128, 128, 255);
                 if (_sprit.Rotation%180 == 0) new Color(64, 128, 128);
                 foreach (Vector2 e in pos)
-                scene.AddGameObject(new LineC(e, pos[Find(e, pos)], col, "meteor2", this));
+                scene.AddGameObject(new LineC(e, pos[Find(e, pos)], col, "meteor", this));
 
                 if (_sprit.Origin.X < -10) _sprit.Origin = new Vector2f(Game.RenderWindow.Size.X, _sprit.Origin.Y);
                 if (_sprit.Origin.X > Game.RenderWindow.Size.X + 10) _sprit.Origin = new Vector2f(0, _sprit.Origin.Y);

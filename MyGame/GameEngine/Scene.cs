@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 
 namespace GameEngine
 {
@@ -10,6 +11,7 @@ namespace GameEngine
     {
         // This holds our game objects.
         readonly List<GameObject> _gameObjects = new List<GameObject>();
+        public bool pause = false;
 
         public List<GameObject> GetObjs()
         {
@@ -25,26 +27,32 @@ namespace GameEngine
         // Called by the Game instance once per frame.
         public void Update(Time time)
         {
-            // Clear the window.
-            Game.RenderWindow.Clear();
-
-            // Go through our normal sequence of game loop stuff.
-
             // Handle any keyboard, mouse events, etc. for our game window.
             Game.RenderWindow.DispatchEvents();
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Q)) { if (pause == true) pause = false; else pause = true; }
+            if (!pause)
+            {
+                // Clear the window.
+                Game.RenderWindow.Clear();
 
-            HandleCollisions();
-            UpdateGameObjects(time);
-            RemoveDeadGameObjects();
-            DrawGameObjects();
+                // Go through our normal sequence of game loop stuff.
 
-            // Draw the window as updated by the game objects.
-            Game.RenderWindow.Display();
+
+
+                HandleCollisions();
+                UpdateGameObjects(time);
+                RemoveDeadGameObjects();
+                DrawGameObjects();
+
+                // Draw the window as updated by the game objects.
+                Game.RenderWindow.Display();
+            }
         }
 
         // This method lets game objects respond to collisions.
         private void HandleCollisions()
         {
+            if (!pause)
             for (int i = 0; i < _gameObjects.Count; i++)
             {
                 var gameObject = _gameObjects[i];

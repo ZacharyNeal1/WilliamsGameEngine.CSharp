@@ -18,7 +18,7 @@ namespace MyGame
 {
     class Metor : GameObject
     {
-        float Speed = 40.0f;
+        float Speed = 20.0f;
         int rot = 1;
         private readonly Sprite _sprit = new Sprite();
         private bool toPlayer = false;

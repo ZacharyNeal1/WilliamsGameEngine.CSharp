@@ -28,16 +28,19 @@ namespace MyGame
         float speed = 5;
         float friction = 0.2f;
         string type = "";
-        Vector2[] forces = null;
+        List<Vector2> forces = null;
         GameScene scene = (GameScene)Game.CurrentScene;
         string tag = "part";
-        bool cycle = false;
-        public Part(Vector2 pos, float rot,string typ = "", Vector2[] tempAr = null)
+        public Part(Vector2 pos, float rot,string typ = "", List<Vector2> tempAr=null)
         {
             int constantRot = new Random().Next(-60, 60);
             type = typ;
-            forces = tempAr;
 
+            if (tempAr != null)
+            {
+                forces = tempAr;
+                //foreach (Vector2 e in tempAr) forces[tempAr.ToList().IndexOf(e) - 1] = new Vector2(e.X/5, e.Y - 90);
+            }
             // quick overview
             //
             // when pressing E (from the ship) it makes 3 of instances of this class
@@ -52,49 +55,52 @@ namespace MyGame
             // once the "partvi" part returns the ship enable goes to 0 and the ship's collion is renabled as well as all other parts killed
 
             _sprit.Color = new SFML.Graphics.Color(0, 255, 0);
-            if (typ == "vapor") if (scene.vaporCount() == 1) tag = "partvi"; else
+            if (typ == "vapor")
+            {
+                AssignTag("vapor");
                 {
                     tag = "partv";
                     speed = (float)new Random().NextDouble() * 10;
+                    //insure there isnt too many particles already
+                    if (scene.vaporCount() >= 60)
+                    {
+                        MakeDead();
+                    }
                 }
+            }
+
 
 
 
             if (typ == "jet")
             {
-                speed += 4;
+                speed += 6;
                 friction = 0.4f;
                 _sprit.Color = new SFML.Graphics.Color(255, 0, 0, 255);
-                constantRot = new Random().Next(-15, 15);
+                constantRot = new Random().Next(-25, 25);
             }
 
             _sprit.Origin = new Vector2f(pos.X, pos.Y);
-            _sprit.Rotation = rot += constantRot;
+            _sprit.Rotation = rot + constantRot;
 
             _sprit.Origin +=
             new Vector2f(
-            15 * MathF.Cos((float)(_sprit.Rotation * (Math.PI / 180.0f))),
-            15 * MathF.Sin((float)(_sprit.Rotation * (Math.PI / 180.0f))));
+            25 * MathF.Cos((float)(_sprit.Rotation * (Math.PI / 180.0f))),
+            25 * MathF.Sin((float)(_sprit.Rotation * (Math.PI / 180.0f))));
 
+            speed = (float)new Random().NextDouble() * 10;
+            
         }
         public override void Update(Time elapsed)
         {
-
             var a = _sprit.Origin;
-
             //makes sure the particles dont go off screen
             var orgin = _sprit.Origin;
-            if (_sprit.Origin.X < -50) _sprit.Origin = new Vector2f(Game.RenderWindow.Size.X, _sprit.Origin.Y);
+            if (_sprit.Origin.X < -10) _sprit.Origin = new Vector2f(Game.RenderWindow.Size.X, _sprit.Origin.Y);
             if (_sprit.Origin.X > Game.RenderWindow.Size.X) _sprit.Origin = new Vector2f(0, _sprit.Origin.Y);
-            if (_sprit.Origin.Y < -50) _sprit.Origin = new Vector2f(_sprit.Origin.X, Game.RenderWindow.Size.Y);
+            if (_sprit.Origin.Y < -10) _sprit.Origin = new Vector2f(_sprit.Origin.X, Game.RenderWindow.Size.Y);
             if (_sprit.Origin.Y > Game.RenderWindow.Size.Y) _sprit.Origin = new Vector2f(_sprit.Origin.X, 0);
 
-            //copies the velocity of the ship
-            if (forces != null) foreach (Vector2 e in forces)
-                    _sprit.Origin +=
-                     new Vector2f
-                       ((float)(e.X * Math.Cos((e.Y + 90) * (0.01745329)))
-                        , (float)(e.X * Math.Sin((e.Y + 90) * (0.01745329))));
 
             //gives the velocity from the orginial rotation
             _sprit.Origin += 
@@ -103,11 +109,12 @@ namespace MyGame
                     speed * MathF.Sin((float)(_sprit.Rotation * (Math.PI / 180.0f))));
 
             // makes the parts slow down over time
-            if (speed > 0) speed -= friction;
+            if (speed > 1) speed -= friction;
             else {
                 speed = 0;
                 if (type == "jet") MakeDead();
             }
+
 
             //psuedo code :
             //
@@ -123,24 +130,48 @@ namespace MyGame
             //
             if (type == "vapor")
             {
-                Vector2 c = Conv.ToVect2(_sprit.Origin), d = Ship.GetPos();
-                if (cycle == true)
+                //copies the velocity of the ship
+                if (forces != null) foreach (Vector2 e in forces)
                 {
-                    _sprit.Rotation = (float)-((MathF.Atan2(c.X - d.X, c.Y - d.Y)+90) *(180 / MathF.PI));
-                    if (speed < 13) speed = 13f;
-                    friction = 0.1f;
-                    foreach (Vector2 e in forces) forces[forces.ToList().IndexOf(e)].X /= 1.01f;
+                    _sprit.Origin += new Vector2f(
+                    e.X/5 * MathF.Cos((float)(e.Y * (Math.PI / 180.0f))),
+                    e.X/5 * MathF.Sin((float)(e.Y * (Math.PI / 180.0f))));
                 }
-                if (scene.shipEnable == -1) cycle = true;
+                if (scene.shipEnable == -1)
+                {
+                    Vector2 c = Conv.ToVect2(_sprit.Origin), d = Ship.GetPos();
+                    int side = 0; //-1 left | 1 right
+                    Vector2 wrap = new Vector2(0, 0);
+
+                    if (Math.Abs(_sprit.Origin.X - Ship.GetPos().X) > Game.RenderWindow.Size.X / 2)
+                    {
+                        if (_sprit.Origin.X > Math.Abs(Game.RenderWindow.Size.X - _sprit.Origin.X))
+                            side = (int)Game.RenderWindow.Size.X + 1;
+                        else side = -11;
+
+
+                        d = new Vector2(side, d.Y);
+                    }
+                    if (Math.Abs(_sprit.Origin.Y - Ship.GetPos().Y) > Game.RenderWindow.Size.Y / 2)
+                    {
+                        if (_sprit.Origin.Y > Math.Abs(Game.RenderWindow.Size.Y - _sprit.Origin.Y))
+                            side = (int)Game.RenderWindow.Size.Y + 1;
+                        else side = -11;
+
+                        d = new Vector2(d.X, side);
+                    }
+
+                    _sprit.Origin +=
+                        new Vector2f(
+                            11 * MathF.Cos((float)((float)-((MathF.Atan2(c.X - d.X, c.Y - d.Y) + 90) * (180 / MathF.PI)) * (Math.PI / 180.0f))),
+                            11 * MathF.Sin((float)((float)-((MathF.Atan2(c.X - d.X, c.Y - d.Y) + 90) * (180 / MathF.PI)) * (Math.PI / 180.0f))));
+
+                }
                 //if the main particle returned to ship (called by the line class colliders) kill the stranglers
                 if (scene.shipEnable == 1) MakeDead();
             }
 
-            //insure there isnt too many particles already
-            if (scene.vaporCount() > 40 &&tag == "partv")
-            {
-                MakeDead();
-            }
+
 
             // this is a badly formatted way of saying make a small line 
             scene.AddGameObject(
@@ -152,6 +183,10 @@ namespace MyGame
             3
             ));
 
+        }
+        static float Distance(Vector2 a, Vector2 b)
+        {
+            return (float)Math.Sqrt(Math.Abs(Math.Pow((b.X - a.X), 2) + Math.Pow((b.Y - a.Y), 2)));
         }
 
     }

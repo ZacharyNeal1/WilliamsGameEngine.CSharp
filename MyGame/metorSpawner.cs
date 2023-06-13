@@ -11,7 +11,7 @@ namespace MyGame
 {
     internal class metorSpawner : GameObject
     {
-        private float delay = 5000;
+        private float delay = 10000;
         private int timer;
         public override void Update(Time elapsed)
         {

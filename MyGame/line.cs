@@ -48,7 +48,6 @@ namespace MyGame
             _sprite2.Rotation = (float)-(MathF.Atan2(b.X - a.X, b.Y - a.Y) * (180 / MathF.PI));
             _sprite2.Color = new Color(c.R, c.G, c.B, (byte)secondLineAlpha);
             if (tag == "laser") _sprite.Scale = new Vector2f(2,2);
-
             SetCollisionCheckEnabled(true);
         }
 
@@ -77,38 +76,28 @@ namespace MyGame
             if (otherGameObject.HasTag("ship") && HasTag("meteor"))
             {
                 GameScene scene = (GameScene)Game.CurrentScene;
-                if (scene.shipEnable != 0) parent.MakeDead(); else scene.addedScore += 10;
+                if (scene.shipEnable == 1) parent.MakeDead(); else scene.addedScore += 10;
             }
             if (otherGameObject.HasTag("meteor") && HasTag("laser"))
             {
                 LineC a = (LineC)otherGameObject;
                 var scene = (GameScene)Game.CurrentScene;
                 if (!parent.IsDead() && !a.parent.IsDead())
-                    scene.addedScore += 1000;
+                    switch (parent)
+                    {
+                        case Metor1: scene.addedScore += 500; break;
+                        case Metor2: scene.addedScore += 1500; break;
+                    }
+                scene.addedScore += 1000;
                 parent.MakeDead();
                 a.parent.MakeDead();
 
-            }
-            if (otherGameObject.HasTag("meteor2") && HasTag("laser"))
-            {
-                LineC a = (LineC)otherGameObject;
-                var scene = (GameScene)Game.CurrentScene;
-                if (!parent.IsDead() && !a.parent.IsDead())
-                    scene.addedScore += 10000;
-                parent.MakeDead();
-                a.parent.MakeDead();
-
-            }
-            if (HasTag("partvi") && otherGameObject.HasTag("ship"))
-            {
-                GameScene scene = (GameScene)Game.CurrentScene;
-                parent.MakeDead();
-
-                scene.shipEnable = 1;
             }
             if (HasTag("partv") && otherGameObject.HasTag("ship"))
             {
                 parent.MakeDead();
+                GameScene scene = (GameScene)Game.CurrentScene;
+                if (scene.vaporCount() < 1) scene.shipEnable = 1;
             }
         }
     }
