@@ -21,7 +21,7 @@ namespace MyGame
         public int shipEnable = 1; // -1 equals the points are returning, 0 equals false/disabled, 1 equals true/enabled
 
         public bool shield = false;
-        public int shieldPower = 1020;
+        public float shieldPower = 1020;
 
         public int scorei = 0;
         public int addedScore = 0;

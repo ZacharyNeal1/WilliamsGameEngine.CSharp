@@ -22,7 +22,7 @@ namespace MyGame
         int rot = 1;
         private readonly Sprite _sprit = new Sprite();
         private bool toPlayer = false;
-        const int scale = 10;
+        const int scale = 20;
         GameScene scene = (GameScene)Game.CurrentScene;
         Vector2[] pos =
         {

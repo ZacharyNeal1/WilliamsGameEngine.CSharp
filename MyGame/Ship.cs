@@ -24,8 +24,11 @@ namespace MyGame
 
         const int delay = 40;
         int timer = delay;
+        int vaporTimer = 60;
 
-        bool show = false   ;
+        int boostTimer = 100;
+
+        bool show = true   ;
 
         const int scale = 25;
         GameScene scene = (GameScene)Game.CurrentScene;
@@ -63,7 +66,8 @@ namespace MyGame
                 else forces[i] = new Vector2(forces[i].X * decay - 0.01f, forces[i].Y);
 
             if (timer > 0) timer--;
-            if (scene.shieldPower < 1020) scene.shieldPower++;
+            if (scene.shieldPower < 1019) scene.shieldPower+=0.75f;
+            if (vaporTimer > 0) vaporTimer--;
 
             //input
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
@@ -78,7 +82,7 @@ namespace MyGame
             {
                 if (scene.shieldPower > 0)
                 {
-                    scene.shieldPower -= 3;
+                    scene.shieldPower -= 4;
                     if (scene.shield == false)
                     {
                         scene.shield = true;
@@ -87,7 +91,20 @@ namespace MyGame
                 }
             }
             else scene.shield = false;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Q)) {
+                if (boostTimer <= 0)
+                {
+                    boostTimer = 100;
+                    float combined = 0;
+                    foreach (Vector2 e in forces)
+                    {
+                        combined += e.X / 3;
+                    }
+                    forces.Add(new Vector2(combined, _sprit.Rotation + 90));
+                }
+            }
             if (Keyboard.IsKeyPressed(Keyboard.Key.A)) {_sprit.Rotation += -3; }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.R)) { scene.AddGameObject(new explode(_sprit.Origin,30,70,4.5f,60)); }
             if (Keyboard.IsKeyPressed(Keyboard.Key.D)) {_sprit.Rotation += 3; }
             
                 if (Keyboard.IsKeyPressed(Keyboard.Key.Space)) 
@@ -100,9 +117,10 @@ namespace MyGame
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.E))
             {
-                if (scene.shipEnable == 1 || scene.vaporCount() <1)
+                if ((scene.shipEnable == 1 || scene.vaporCount() <1 )&&vaporTimer <1)
                 {
                     scene.shipEnable = 0;
+                    forces.Add(new Vector2(30f, _sprit.Rotation + 90));
                     for (int i = 0; i < 20; i++)
                     {
                         int rotation = 0;
@@ -118,7 +136,10 @@ namespace MyGame
             else
             {
                 if (scene.shipEnable == 0)
+                {
+                    vaporTimer = 50;
                     scene.shipEnable = -1;
+                }
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.Escape)) { Environment.Exit(0); }
 
@@ -136,8 +157,10 @@ namespace MyGame
             {
                 Vector2 pos1 = CirPos(_sprit.Rotation + 90, scale * 2.4f, _sprit.Origin);
                 Vector2 pos2 = CirPos(_sprit.Rotation + 180, scale * 1f, _sprit.Origin);
-                float dist = (float)Math.Sqrt(Math.Abs(Math.Pow((pos2.X - pos1.X), 2) + Math.Pow((pos2.Y - pos1.Y), 2)));
-                scene.AddGameObject(new LineC(pos2, pos1, new Color(0, 0, 255), "", this, (int)-(scale-(scene.shieldPower*(1020/dist-scale)))));
+                float dist = (float)Math.Sqrt(Math.Abs(Math.Pow((pos2.X - pos1.X), 2) + Math.Pow((pos2.Y - pos1.Y), 2)))-scale;
+                Color color = new Color(0, 0, 255);
+                //if (scene.shieldPower) color = new Color(128, 128, 255);
+                scene.AddGameObject(new LineC(pos2, pos1, color, "", this, ((scene.shieldPower/1020f)*dist)-(scale*2.6f)));
             }
 
             if (_sprit.Origin.X < -10) _sprit.Origin = new Vector2f(Game.RenderWindow.Size.X, _sprit.Origin.Y);
