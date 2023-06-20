@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -11,8 +12,7 @@ namespace GameEngine
     {
         // This holds our game objects.
         readonly List<GameObject> _gameObjects = new List<GameObject>();
-        public bool pause = false;
-
+        public bool pause = true;
         public List<GameObject> GetObjs()
         {
             return _gameObjects;
@@ -29,8 +29,10 @@ namespace GameEngine
         {
             // Handle any keyboard, mouse events, etc. for our game window.
             Game.RenderWindow.DispatchEvents();
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Q)) { if (pause == true) pause = false; else pause = true; }
-            if (!pause)
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Y)) pause = true;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.U)) pause = false;
+            HandleCollisions();
+            if (pause)
             {
                 // Clear the window.
                 Game.RenderWindow.Clear();
@@ -38,8 +40,8 @@ namespace GameEngine
                 // Go through our normal sequence of game loop stuff.
 
 
-
                 HandleCollisions();
+
                 UpdateGameObjects(time);
                 RemoveDeadGameObjects();
                 DrawGameObjects();
@@ -52,13 +54,12 @@ namespace GameEngine
         // This method lets game objects respond to collisions.
         private void HandleCollisions()
         {
-            if (!pause)
             for (int i = 0; i < _gameObjects.Count; i++)
             {
-                var gameObject = _gameObjects[i];
+                GameObject gameObject = _gameObjects[i];
 
                 // Only check objects that ask to be checked.
-                if (!gameObject.IsCollisionCheckEnabled()) continue;
+                //if (!gameObject.IsCollisionCheckEnabled()) continue;
 
                 FloatRect collisionRect = gameObject.GetCollisionRect();
 
@@ -88,13 +89,14 @@ namespace GameEngine
         // This function calls update on each of our game objects.
         private void UpdateGameObjects(Time time)
         {
+            //_gameObjects.ForEach(x => { x.Update(time); });
             for (int i = 0; i < _gameObjects.Count; i++) _gameObjects[i].Update(time);
         }
 
         // This function calls draw on each of our game objects.
         private void DrawGameObjects()
         {
-            foreach (var gameObject in _gameObjects) gameObject.Draw();
+            foreach (GameObject e in _gameObjects) e.Draw();
         }
 
         // This function removes objects that indicate they are dead from the scene.

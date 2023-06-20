@@ -16,7 +16,7 @@ namespace MyGame
 {
     public class Laser : GameObject
     {
-        private const float Speed = 20.0f;
+        private const float Speed = 30.0f;
         int stay = 60;
         private readonly Sprite _sprite = new Sprite();
         GameScene scene = (GameScene)Game.CurrentScene;

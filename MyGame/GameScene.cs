@@ -25,6 +25,7 @@ namespace MyGame
 
         public int scorei = 0;
         public int addedScore = 0;
+        public int lives = 3;
         public GameScene()
         {
             AddGameObject(new Ship());
@@ -38,17 +39,9 @@ namespace MyGame
             int a = 0;
             foreach(GameObject e in GetObjs())
             {
-                if (e.HasTag("vapor")&&!e.IsDead()) a++;
+                if (e.HasTag("vapor")) a++;
             }
             return a;
-        }
-        public bool CountMainPart()
-        {
-            foreach (GameObject e in GetObjs())
-            {
-                if (e.HasTag("partvi") && !e.IsDead()) return true;
-            }
-            return false;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace MyGame
     {
         public static readonly Sprite _sprit = new Sprite();
 
-        const int delay = 40;
+        const int delay = 30;
         int timer = delay;
         int vaporTimer = 60;
 
@@ -61,12 +61,15 @@ namespace MyGame
             }
 
             float decay = 0.995f;
-            if (scene.shipEnable != 1) decay = 0.985f;
+            if (scene.shipEnable != 1) decay = 0.989f;
             for (int i = 0; i < forces.Count(); i++) if (forces[i].X < 0.01f) forces.RemoveAt(i);
                 else forces[i] = new Vector2(forces[i].X * decay - 0.01f, forces[i].Y);
 
             if (timer > 0) timer--;
-            if (scene.shieldPower < 1019) scene.shieldPower+=0.75f;
+            float total = 0;
+            foreach (Vector2 e in forces) total += e.X;
+            if (scene.shieldPower < 1019) scene.shieldPower+=(0.25f + (total/100));
+            //Console.WriteLine(total);
             if (vaporTimer > 0) vaporTimer--;
 
             //input
@@ -120,7 +123,7 @@ namespace MyGame
                 if ((scene.shipEnable == 1 || scene.vaporCount() <1 )&&vaporTimer <1)
                 {
                     scene.shipEnable = 0;
-                    forces.Add(new Vector2(30f, _sprit.Rotation + 90));
+                    forces.Add(new Vector2(40f, _sprit.Rotation + 90));
                     for (int i = 0; i < 20; i++)
                     {
                         int rotation = 0;
@@ -135,6 +138,7 @@ namespace MyGame
             }
             else
             {
+                if (scene.shipEnable == -1 && scene.vaporCount() == 0) scene.shipEnable = 1;
                 if (scene.shipEnable == 0)
                 {
                     vaporTimer = 50;
@@ -167,6 +171,15 @@ namespace MyGame
             if (_sprit.Origin.X > Game.RenderWindow.Size.X + 10) _sprit.Origin = new Vector2f(0, _sprit.Origin.Y);
             if (_sprit.Origin.Y < -10) _sprit.Origin = _sprit.Origin = new Vector2f(_sprit.Origin.X, Game.RenderWindow.Size.Y);
             if (_sprit.Origin.Y > Game.RenderWindow.Size.Y + 10) _sprit.Origin = new Vector2f(Game.RenderWindow.Size.X, 0);
+
+            if (_sprit.Origin.X < 600)
+                scene.AddGameObject(new LineC(new Vector2(Game.RenderWindow.Size.X-50,_sprit.Origin.Y), new Vector2(Game.RenderWindow.Size.X, _sprit.Origin.Y), Color.Green));
+            if (_sprit.Origin.X > Game.RenderWindow.Size.X - 600)
+                scene.AddGameObject(new LineC(new Vector2(0, _sprit.Origin.Y), new Vector2(50, _sprit.Origin.Y), Color.Green));
+            if (_sprit.Origin.Y > Game.RenderWindow.Size.Y - 600)
+                scene.AddGameObject(new LineC(new Vector2(_sprit.Origin.X, 0), new Vector2(_sprit.Origin.X, 50), Color.Green));
+            if (_sprit.Origin.Y < 600)
+                scene.AddGameObject(new LineC(new Vector2(_sprit.Origin.X, Game.RenderWindow.Size.Y), new Vector2(_sprit.Origin.X, Game.RenderWindow.Size.Y-50), Color.Green));
         }
         static int Find(Vector2 e, Vector2[] pos)
         {

@@ -131,15 +131,16 @@ namespace MyGame
             };
         Vector2[] text10 =
         {// ,
-                new Vector2((float)(scale*1.5), scale*2),
-                new Vector2((float)(scale * 1.5), (float)(scale*2.5)),
+                new Vector2(0, scale),
+                new Vector2(scale*2, scale),
 
             };
-        Vector2[] text11 =
+        static Vector2[] text11 =
         {// ship
-                new Vector2((float)(scale*1.5), scale*2),
-                new Vector2((float)(scale * 1.5), (float)(scale*2.5)),
-
+            new Vector2(0, scale*0.5f),
+            new Vector2(scale*1.2f, scale),
+            new Vector2(0, scale*1.5f),
+                new Vector2(0, scale*0.5f)
             };
         public Score()
         {
@@ -164,9 +165,11 @@ namespace MyGame
 
 
             int len = scene.scorei.ToString().Length;
-            for (int i = 0; i < scene.scorei.ToString().Length; i++)
+            string liveCounter = "";
+            for (int q = scene.lives; q > 0; q--) liveCounter += "a";
+            for (int i = 0; i < (scene.scorei+liveCounter).ToString().Length; i++)
             {
-                switch (scene.scorei.ToString()[i])
+                switch ((scene.scorei + liveCounter).ToString()[i])
                 {
                     case '0': Drawi(text0,i,len); break;
                     case '1': Drawi(text1,i,len); break;
@@ -178,7 +181,8 @@ namespace MyGame
                     case '7': Drawi(text7, i, len); break;
                     case '8': Drawi(text8, i, len); break;
                     case '9': Drawi(text9, i, len); break;
-                    case ',': Drawi(text10, i, len);break;
+                    case '-': Drawi(text10, i, len);break;
+                    case 'a': Drawi(text11, i, len); break;
                 }
             }
             if (scene.addedScore.ToString().Length > 1)
@@ -210,7 +214,9 @@ namespace MyGame
             Vector2 vector2 = new Vector2(i * (scale*2), 0);
             Vector2 Pos = startingPos - new Vector2(len * scale, 0);
             Color col = new Color(255, 255, 255);
-            if (added) Pos = startingPosa - new Vector2(len * scale, 0);
+            if (scene.scorei < 0) col = Color.Red;
+            if (text11 == e) col = Color.Green;
+                if (added) Pos = startingPosa - new Vector2(len * scale, 0);
             if (added) col = new Color(128, 128, 128);
             foreach (Vector2 a in e) scene.AddGameObject(new LineC(a + Pos+vector2, e[Find(a, e)] + Pos+vector2, col, "scoreText", null, 1));
            

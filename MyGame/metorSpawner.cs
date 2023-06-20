@@ -24,6 +24,7 @@ namespace MyGame
                 Game.CurrentScene.AddGameObject(new Metor());
                 Game.CurrentScene.AddGameObject(new Metor1());
                 Game.CurrentScene.AddGameObject(new Metor2());
+                Game.CurrentScene.AddGameObject(new Metor3(Conv.ToVect2(Game.RenderWindow.Size) / 2));
             }
         }
     }

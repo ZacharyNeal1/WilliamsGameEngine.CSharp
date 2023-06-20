@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Numerics;
 using System.Reflection.PortableExecutable;
@@ -24,26 +25,30 @@ namespace MyGame
         GameScene scene = (GameScene)Game.CurrentScene;
         List<Vector2[]> lines = new List<Vector2[]>();
         int lifetime = 0;
-        Color col = new Color(255,125,0);
+        float decay = 0.97f;
+        Color col = new Color(255,128,0);
         string tag = "explode";
-        public explode(Vector2f pos,int lineCount, float cirScale,float speed,int life= 100, bool deadly = false)
+        float blue = 0;
+
+        public explode(Vector2f pos, int lineCount, float cirScale, float speed, int life)
         {
             lifetime = life;
+            col = new Color(255, (byte)new Random().Next(100, 140), 0);
             for (int i = 0; i <= lineCount; i++)
             {
                 int random = new Random().Next(1,360);
                 Vector2 e = CirPos(random, cirScale, Conv.ToVect2(pos));
                 Vector2 item = new Vector2(e.X, e.Y);
-                if (deadly) tag = "boom";
                 lines.Add(new Vector2[] { item, item, new Vector2(new Random().Next((int)(speed/1.5f),(int)(speed*1.5f)),random) });
             }
         }
         public override void Update(Time elapsed)
         {
-            if (lifetime <= 0) col = new Color((byte)(col.R - 2), (byte)(col.G-3), col.B); else lifetime--;
+            blue += 0.25f;
+            if (lifetime <= 0) col = new Color((byte)(col.R - 4), (byte)(col.G-2), (byte)(blue)); else lifetime--;
             if (col.R < 16) MakeDead();
             if (col.G < 16) col = new Color(col.R, 3, 0);
-            lines.ForEach(x => { x[1] = CirPos(x[2].Y, Dist(x[0], x[1]) + x[2].X, x[0]); });
+            lines.ForEach(x => { x[1] = CirPos(x[2].Y, Dist(x[0], x[1]) + x[2].X, x[0]); x[2] = new Vector2(x[2].X* decay, x[2].Y); });
             foreach (Vector2[] e in lines) scene.AddGameObject(new LineC(e[0], e[1], col, tag, this));
         }
         static Vector2 CirPos(float rot, float rad, Vector2 center)

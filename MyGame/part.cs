@@ -163,8 +163,8 @@ namespace MyGame
 
                     _sprit.Origin +=
                         new Vector2f(
-                            11 * MathF.Cos((float)((float)-((MathF.Atan2(c.X - d.X, c.Y - d.Y) + 90) * (180 / MathF.PI)) * (Math.PI / 180.0f))),
-                            11 * MathF.Sin((float)((float)-((MathF.Atan2(c.X - d.X, c.Y - d.Y) + 90) * (180 / MathF.PI)) * (Math.PI / 180.0f))));
+                            17 * MathF.Cos((float)((float)-((MathF.Atan2(c.X - d.X, c.Y - d.Y) + 90) * (180 / MathF.PI)) * (Math.PI / 180.0f))),
+                            17 * MathF.Sin((float)((float)-((MathF.Atan2(c.X - d.X, c.Y - d.Y) + 90) * (180 / MathF.PI)) * (Math.PI / 180.0f))));
 
                 }
                 //if the main particle returned to ship (called by the line class colliders) kill the stranglers
