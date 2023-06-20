@@ -24,7 +24,7 @@ namespace MyGame
 
         public bool color = false; //invert color
 
-        public bool thin = false; // thiner lines
+        public bool thin = false; // thiner lines - better for preformance
 
         public bool mutatorMode = false; // chaos
         //
