@@ -20,11 +20,18 @@ namespace MyGame
     {
         private const float Speed = 5.0f;
         private readonly Sprite _sprit = new Sprite();
-        const int scale = 50;
+        int scale = 50;
         const int partCount = 5;
         GameScene scene = (GameScene)Game.CurrentScene;
         static Vector2[] pos =
         {
+            new Vector2(1,1)
+        };
+        public Shield()
+        {
+            if (scene.bigShield) scale = 100;
+            pos = new Vector2[]
+         {
             new Vector2(scale, scale),
             new Vector2(scale*2, scale),
             new Vector2(scale*3, scale*2),
@@ -32,8 +39,6 @@ namespace MyGame
             new Vector2(scale, scale*3),
             new Vector2(0, scale)
         };
-        public Shield()
-        {
         }
         public override void Draw()
         {

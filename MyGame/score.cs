@@ -149,6 +149,11 @@ namespace MyGame
         public override void Update(Time elapsed)
         {
             GameScene scene = (GameScene)Game.CurrentScene;
+            if (scene.scoreToLiveOverFlow && scene.scorei > scene.scoreOverflow)
+            {
+                scene.scorei -= scene.scoreOverflow;
+                scene.lives++;
+            }
 
             if (scene.addedScore > 0)
             {
@@ -167,9 +172,12 @@ namespace MyGame
             int len = scene.scorei.ToString().Length;
             string liveCounter = "";
             for (int q = scene.lives; q > 0; q--) liveCounter += "a";
+            if (scene.mutatorMode) scene.AddGameObject(new LineC(startingPos + new Vector2(0,scale*3), startingPos + new Vector2((scene.scorei + liveCounter).ToString().Length * scale, scale*3),Color.Magenta));
             for (int i = 0; i < (scene.scorei+liveCounter).ToString().Length; i++)
             {
-                switch ((scene.scorei + liveCounter).ToString()[i])
+                var switchStatement = (scene.scorei + liveCounter).ToString()[i];
+                    if (scene.messyScore == true) switchStatement = new Random().Next(1, 9).ToString()[0];
+                switch (switchStatement)
                 {
                     case '0': Drawi(text0,i,len); break;
                     case '1': Drawi(text1,i,len); break;

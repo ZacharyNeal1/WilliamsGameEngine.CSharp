@@ -1,18 +1,31 @@
 ﻿using GameEngine;
+using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Security;
+using System.Numerics;
+using System.Reflection.PortableExecutable;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace MyGame
 {
-    internal class metorSpawner : GameObject
+    class metorSpawner : GameObject
     {
         private float delay = 10000;
         private int timer;
+        public static Scene scene = (GameScene)Game.CurrentScene;
+        public metorSpawner ()
+        {
+        }
         public override void Update(Time elapsed)
         {
             timer -= elapsed.AsMilliseconds();

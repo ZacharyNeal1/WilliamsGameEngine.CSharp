@@ -61,7 +61,7 @@ namespace MyGame
             {
                 rot = (int)-(MathF.Atan2(c.X - d.X, c.Y - d.Y) * (180 / MathF.PI));
                 rot += 90;
-
+                if (scene.messyMeteors == true) foreach (Vector2 e in pos) scene.AddGameObject(new LineC(Conv.ToVect2(_sprit.Origin), new Vector2(_sprit.Rotation,_sprit.Rotation),Color.Yellow));
                 pos[0] = CirPos(pos[0], _sprit.Rotation, -30, _sprit.Origin, scale);
                 pos[1] = CirPos(pos[1], _sprit.Rotation, 30, _sprit.Origin, scale);
                 pos[2] = CirPos(pos[2], _sprit.Rotation, 90, _sprit.Origin, scale);

@@ -30,6 +30,11 @@ namespace MyGame
 
         bool show = true   ;
 
+
+
+        int mutationTimer = 600;
+        int mTimer = 0;
+
         const int scale = 25;
         GameScene scene = (GameScene)Game.CurrentScene;
         List<Vector2> forces = new List<Vector2>();
@@ -71,6 +76,27 @@ namespace MyGame
             if (scene.shieldPower < 1019) scene.shieldPower+=(0.25f + (total/100));
             //Console.WriteLine(total);
             if (vaporTimer > 0) vaporTimer--;
+            if (mTimer > 0) mTimer--; else
+                if (scene.mutatorMode == true)
+            {
+                mTimer = mutationTimer;
+                for (int i = 0; i < 3; i ++)
+                switch (new Random().Next(1,13)) { 
+                    case 1: scene.messyScore= Toggle(scene.messyScore); break;
+                    case 2: scene.fastRotate = Toggle(scene.fastRotate); break;
+                    case 3: scene.Parts= Toggle(scene.Parts); break;
+                    case 4: scene.tripleShot = Toggle(scene.tripleShot); break;
+                        case 5: scene.track = Toggle(scene.track); break;
+                        case 6: scene.messyMeteors = Toggle(scene.messyMeteors); break;
+                        case 7: scene.bigShield = Toggle(scene.bigShield); break;
+                        case 8: scene.fastShoot = Toggle(scene.fastShoot); break;
+                        case 9: scene.split = Toggle(scene.split); break;
+                        case 10: scene.small = Toggle(scene.small); break;
+                        case 11: scene.thin= Toggle(scene.thin); break;
+                        case 12: scene.lifeFromShot = Toggle(scene.lifeFromShot); break;
+                        case 13: scene.color= Toggle(scene.color); break;
+                    }
+            }
 
             //input
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
@@ -95,27 +121,27 @@ namespace MyGame
             }
             else scene.shield = false;
             if (Keyboard.IsKeyPressed(Keyboard.Key.Q)) {
-                if (boostTimer <= 0)
-                {
-                    boostTimer = 100;
                     float combined = 0;
                     foreach (Vector2 e in forces)
                     {
-                        combined += e.X / 3;
+                        combined += e.X / 10;
                     }
-                    forces.Add(new Vector2(combined, _sprit.Rotation + 90));
-                }
+                    //forces.Add(new Vector2(combined, _sprit.Rotation + 90));
             }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) {_sprit.Rotation += -3; }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.R)) { scene.AddGameObject(new explode(_sprit.Origin,30,70,4.5f,60)); }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) {_sprit.Rotation += 3; }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) {if (!scene.fastRotate) _sprit.Rotation += -3; else _sprit.Rotation += -9; }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) {if (!scene.fastRotate) _sprit.Rotation += 3; else _sprit.Rotation += 9; }
             
                 if (Keyboard.IsKeyPressed(Keyboard.Key.Space)) 
             {
-                if (timer == 0) {
+                if (timer == 0 || scene.fastShoot) {
                     timer = delay;
                     scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 270));
                     forces.Add(new Vector2(10f, _sprit.Rotation + 270));
+                    if (scene.tripleShot)
+                    {
+                        scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 255));
+                        scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 285));
+                    }
                 }
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.E))
@@ -124,7 +150,8 @@ namespace MyGame
                 {
                     scene.shipEnable = 0;
                     forces.Add(new Vector2(40f, _sprit.Rotation + 90));
-                    for (int i = 0; i < 20; i++)
+                    int count = 20;
+                    for (int i = 0; i < count; i++)
                     {
                         int rotation = 0;
                         foreach (Vector2 e in pos)
@@ -153,6 +180,10 @@ namespace MyGame
 
             Color col = new Color(0, 64, 0);
             if (scene.shipEnable == 1) col = new Color(0, 255, 0);
+
+            if (scene.track) scene.AddGameObject(new LineC(
+                pos[1], CirPos(_sprit.Rotation + 90, 1000, _sprit.Origin), Color.Magenta
+                ));
 
             foreach (Vector2 e in pos)
                     scene.AddGameObject(new LineC(e, pos[Find(e, pos)], col, "ship", this));
@@ -191,6 +222,10 @@ namespace MyGame
                 center.X+rad * MathF.Cos(rot  * (MathF.PI / 180)),
                 center.Y+rad * MathF.Sin(rot  * (MathF.PI / 180))
                 );
+        }
+        static bool Toggle(bool e)
+        {
+            if (e) return false; else return true;
         }
     }
 }

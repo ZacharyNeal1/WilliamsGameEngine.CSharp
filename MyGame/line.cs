@@ -58,20 +58,30 @@ namespace MyGame
             if (tag == "partv")
             {
                 _sprite.Scale = new Vector2f(2.5f, 2.5f);
+
+            }
+            GameScene scene = (GameScene)Game.CurrentScene;
+            if (scene.color)
+            {
+                _sprite.Color = new Color((byte)(255 - _sprite.Color.R), (byte)(255 - _sprite.Color.G), (byte)(255 - _sprite.Color.B));
+                _sprite2.Color = _sprite.Color;
             }
             SetCollisionCheckEnabled(true);
         }
 
         public override void Draw()
-        { 
+        {
+            GameScene scene = (GameScene)Game.CurrentScene;
             Game.RenderWindow.Draw(_sprite);
-            if (!HasTag("partv"))
+            if (!HasTag("partv"))if (!scene.thin)
             Game.RenderWindow.Draw(_sprite2);
         }
 
         public override void Update(Time elapsed)
         {
             if (stay != 0) stay--; else MakeDead();
+            GameScene scene = (GameScene)Game.CurrentScene;
+            if (scene.Parts == true) _sprite.Scale += new Vector2f(1, 1);
         }
         public override FloatRect GetCollisionRect()
         {
@@ -109,6 +119,7 @@ namespace MyGame
                     Vector2f pos = new Vector2f(temp.GetCollisionRect().Left, temp.GetCollisionRect().Top);
                     scene.AddGameObject(new explode(pos, 15, 20, 3.5f, 10));
                     a.parent.MakeDead();
+                    if (scene.lifeFromShot) scene.lives++;
                     switch (parent)
                     {
                         case Metor1: scene.addedScore += 500; break;
@@ -118,6 +129,13 @@ namespace MyGame
                             { 
                                 scene.AddGameObject(new Metor3(Conv.ToVect2(pos), true));
                                 scene.AddGameObject(new Metor3(Conv.ToVect2(pos), true));
+                                if (scene.split)
+                                {
+                                    scene.AddGameObject(new Metor3(Conv.ToVect2(pos), true));
+                                    scene.AddGameObject(new Metor3(Conv.ToVect2(pos), true));
+                                    scene.AddGameObject(new Metor3(Conv.ToVect2(pos), true));
+                                    scene.AddGameObject(new Metor3(Conv.ToVect2(pos), true));
+                                }
                             } 
                             break;
                     }

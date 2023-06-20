@@ -50,6 +50,7 @@ namespace MyGame
             _sprit.Origin = new Vector2f(_sprit.Origin.X + x, _sprit.Origin.Y+ y);
             if (toPlayer)
             {
+                if (scene.small) Speed = 1;
                 pos[0] = CirPos(pos[0], 0, 0, scale, _sprit.Origin);
                 pos[1] = CirPos(pos[1], 0, 180, scale, _sprit.Origin);
                 pos[2] = CirPos(pos[2], 0, 0, 0, _sprit.Origin);

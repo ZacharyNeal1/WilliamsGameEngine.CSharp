@@ -18,6 +18,17 @@ namespace MyGame
 {
     class GameScene : Scene
     {
+        //
+        public bool scoreToLiveOverFlow = true; // when you hit the score set below you gain a life
+        public int scoreOverflow = 25000; // will only be used if above is true
+
+        public bool color = false; //invert color
+
+        public bool thin = false; // thiner lines
+
+        public bool mutatorMode = false; // chaos
+        //
+
         public int shipEnable = 1; // -1 equals the points are returning, 0 equals false/disabled, 1 equals true/enabled
 
         public bool shield = false;
@@ -26,6 +37,19 @@ namespace MyGame
         public int scorei = 0;
         public int addedScore = 0;
         public int lives = 3;
+
+        public bool
+        tripleShot = false
+        , fastRotate = false
+        , messyScore = false
+        , Parts = false
+        , track = false
+        , messyMeteors = false
+        , bigShield = false
+        , fastShoot = false
+        , split = false
+        , lifeFromShot = false
+        , small = false;
         public GameScene()
         {
             AddGameObject(new Ship());
