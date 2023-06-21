@@ -20,7 +20,7 @@ namespace MyGame
 {
     class metorSpawner : GameObject
     {
-        private float delay = 10000;
+        private float delay = 15000;
         private int timer;
         public static Scene scene = (GameScene)Game.CurrentScene;
         public metorSpawner ()

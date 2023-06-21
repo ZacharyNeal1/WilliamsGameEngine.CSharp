@@ -22,13 +22,14 @@ namespace MyGame
     {
         public static readonly Sprite _sprit = new Sprite();
 
-        const int delay = 30;
+        const int delay = 20;
         int timer = delay;
         int vaporTimer = 60;
 
         int boostTimer = 100;
 
         bool show = true   ;
+        bool pressed = false;
 
 
 
@@ -37,6 +38,7 @@ namespace MyGame
 
         const int scale = 25;
         GameScene scene = (GameScene)Game.CurrentScene;
+
         List<Vector2> forces = new List<Vector2>();
         Vector2[] pos =
         {
@@ -130,20 +132,27 @@ namespace MyGame
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.A)) {if (!scene.fastRotate) _sprit.Rotation += -3; else _sprit.Rotation += -9; }
             if (Keyboard.IsKeyPressed(Keyboard.Key.D)) {if (!scene.fastRotate) _sprit.Rotation += 3; else _sprit.Rotation += 9; }
-            
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Space)) 
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && scene.shipEnable == 1)
             {
-                if (timer == 0 || scene.fastShoot) {
-                    timer = delay;
-                    scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 270));
-                    forces.Add(new Vector2(10f, _sprit.Rotation + 270));
-                    if (scene.tripleShot)
+
+                if (pressed == false)
+                {
+                    pressed = true;
+                    if (timer == 0 || scene.fastShoot)
                     {
-                        scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 255));
-                        scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 285));
+                        timer = delay;
+                        scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 270));
+                        forces.Add(new Vector2(10f, _sprit.Rotation + 270));
+                        if (scene.tripleShot)
+                        {
+                            scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 255));
+                            scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 285));
+                        }
                     }
                 }
             }
+            else pressed = false;
             if (Keyboard.IsKeyPressed(Keyboard.Key.E))
             {
                 if ((scene.shipEnable == 1 || scene.vaporCount() <1 )&&vaporTimer <1)
