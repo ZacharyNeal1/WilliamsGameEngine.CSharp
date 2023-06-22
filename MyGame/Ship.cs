@@ -5,6 +5,7 @@ using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Security;
 using System.Numerics;
@@ -22,11 +23,10 @@ namespace MyGame
     {
         public static readonly Sprite _sprit = new Sprite();
 
-        const int delay = 20;
+        const int delay = 10;
         int timer = delay;
         int vaporTimer = 60;
 
-        int boostTimer = 100;
 
         bool show = true   ;
         bool pressed = false;
@@ -73,9 +73,8 @@ namespace MyGame
                 else forces[i] = new Vector2(forces[i].X * decay - 0.01f, forces[i].Y);
 
             if (timer > 0) timer--;
-            float total = 0;
-            foreach (Vector2 e in forces) total += e.X;
-            if (scene.shieldPower < 1019) scene.shieldPower+=(0.25f + (total/100));
+
+            if (scene.shieldPower < 1019) scene.shieldPower+=(0.25f + (Combine()/100));
             //Console.WriteLine(total);
             if (vaporTimer > 0) vaporTimer--;
             if (mTimer > 0) mTimer--; else
@@ -122,28 +121,20 @@ namespace MyGame
                 }
             }
             else scene.shield = false;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Q)) {
-                    float combined = 0;
-                    foreach (Vector2 e in forces)
-                    {
-                        combined += e.X / 10;
-                    }
-                    //forces.Add(new Vector2(combined, _sprit.Rotation + 90));
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) {if (!scene.fastRotate) _sprit.Rotation += -3; else _sprit.Rotation += -9; }
+                if (Keyboard.IsKeyPressed(Keyboard.Key.A)) {if (!scene.fastRotate) _sprit.Rotation += -3; else _sprit.Rotation += -9; }
             if (Keyboard.IsKeyPressed(Keyboard.Key.D)) {if (!scene.fastRotate) _sprit.Rotation += 3; else _sprit.Rotation += 9; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && scene.shipEnable == 1)
             {
 
-                if (pressed == false)
+                if (pressed == false || scene.fastShoot)
                 {
                     pressed = true;
                     if (timer == 0 || scene.fastShoot)
                     {
                         timer = delay;
                         scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 270));
-                        forces.Add(new Vector2(10f, _sprit.Rotation + 270));
+                        forces.Add(new Vector2(5f, _sprit.Rotation + 270));
                         if (scene.tripleShot)
                         {
                             scene.AddGameObject(new Laser(pos[1], _sprit.Rotation - 255));
@@ -159,7 +150,7 @@ namespace MyGame
                 {
                     scene.shipEnable = 0;
                     forces.Add(new Vector2(40f, _sprit.Rotation + 90));
-                    int count = 20;
+                    int count = 10;
                     for (int i = 0; i < count; i++)
                     {
                         int rotation = 0;
@@ -210,16 +201,12 @@ namespace MyGame
             if (_sprit.Origin.X < -10) _sprit.Origin = new Vector2f(Game.RenderWindow.Size.X, _sprit.Origin.Y);
             if (_sprit.Origin.X > Game.RenderWindow.Size.X + 10) _sprit.Origin = new Vector2f(0, _sprit.Origin.Y);
             if (_sprit.Origin.Y < -10) _sprit.Origin = _sprit.Origin = new Vector2f(_sprit.Origin.X, Game.RenderWindow.Size.Y);
-            if (_sprit.Origin.Y > Game.RenderWindow.Size.Y + 10) _sprit.Origin = new Vector2f(Game.RenderWindow.Size.X, 0);
+            if (_sprit.Origin.Y > Game.RenderWindow.Size.Y + 10) _sprit.Origin = new Vector2f(_sprit.Origin.X, 0);
 
-            if (_sprit.Origin.X < 600)
-                scene.AddGameObject(new LineC(new Vector2(Game.RenderWindow.Size.X-50,_sprit.Origin.Y), new Vector2(Game.RenderWindow.Size.X, _sprit.Origin.Y), Color.Green));
-            if (_sprit.Origin.X > Game.RenderWindow.Size.X - 600)
-                scene.AddGameObject(new LineC(new Vector2(0, _sprit.Origin.Y), new Vector2(50, _sprit.Origin.Y), Color.Green));
-            if (_sprit.Origin.Y > Game.RenderWindow.Size.Y - 600)
-                scene.AddGameObject(new LineC(new Vector2(_sprit.Origin.X, 0), new Vector2(_sprit.Origin.X, 50), Color.Green));
-            if (_sprit.Origin.Y < 600)
-                scene.AddGameObject(new LineC(new Vector2(_sprit.Origin.X, Game.RenderWindow.Size.Y), new Vector2(_sprit.Origin.X, Game.RenderWindow.Size.Y-50), Color.Green));
+            scene.AddGameObject(new LineC(new Vector2(Game.RenderWindow.Size.X-50,_sprit.Origin.Y), new Vector2(Game.RenderWindow.Size.X, _sprit.Origin.Y), Color.Green));
+            scene.AddGameObject(new LineC(new Vector2(0, _sprit.Origin.Y), new Vector2(50, _sprit.Origin.Y), Color.Green));
+            scene.AddGameObject(new LineC(new Vector2(_sprit.Origin.X, 0), new Vector2(_sprit.Origin.X, 50), Color.Green));
+            scene.AddGameObject(new LineC(new Vector2(_sprit.Origin.X, Game.RenderWindow.Size.Y), new Vector2(_sprit.Origin.X, Game.RenderWindow.Size.Y-50), Color.Green));
         }
         static int Find(Vector2 e, Vector2[] pos)
         {
@@ -231,6 +218,12 @@ namespace MyGame
                 center.X+rad * MathF.Cos(rot  * (MathF.PI / 180)),
                 center.Y+rad * MathF.Sin(rot  * (MathF.PI / 180))
                 );
+        }
+        public float Combine()
+        {
+            float total = 0;
+            foreach (Vector2 e in forces) total += e.X;
+            return total;
         }
         static bool Toggle(bool e)
         {

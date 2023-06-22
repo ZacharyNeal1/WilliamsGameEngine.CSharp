@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Color = SFML.Graphics.Color;
 using SFML.Graphics.Glsl;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace MyGame
 {
@@ -55,12 +56,18 @@ namespace MyGame
                 _sprite.Scale = new Vector2f(3, 3);
                 _sprite2.Scale = new Vector2f(3, 3);
             }
+            if (tag == "star")
+            {
+                _sprite.Scale = new Vector2f(3, 3);
+                _sprite2.Scale = new Vector2f(1, 3);
+            }
             if (tag == "partv")
             {
                 _sprite.Scale = new Vector2f(2.5f, 2.5f);
 
             }
             GameScene scene = (GameScene)Game.CurrentScene;
+            if (scene.thin) _sprite2.Color = Color.Transparent;
             if (scene.color)
             {
                 _sprite.Color = new Color((byte)(255 - _sprite.Color.R), (byte)(255 - _sprite.Color.G), (byte)(255 - _sprite.Color.B));
@@ -71,17 +78,14 @@ namespace MyGame
 
         public override void Draw()
         {
-            GameScene scene = (GameScene)Game.CurrentScene;
             Game.RenderWindow.Draw(_sprite);
-            if (!HasTag("partv"))if (!scene.thin)
+            if (!HasTag("partv"))
             Game.RenderWindow.Draw(_sprite2);
         }
 
         public override void Update(Time elapsed)
         {
             if (stay != 0) stay--; else MakeDead();
-            GameScene scene = (GameScene)Game.CurrentScene;
-            if (scene.Parts == true) _sprite.Scale += new Vector2f(1, 1);
         }
         public override FloatRect GetCollisionRect()
         {

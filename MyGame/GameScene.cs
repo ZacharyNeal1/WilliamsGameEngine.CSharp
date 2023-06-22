@@ -19,6 +19,8 @@ namespace MyGame
     class GameScene : Scene
     {
         //
+        public int diff = 1; // 0 - easy | 1 - normal | 2 - hard
+
         public bool scoreToLiveOverFlow = true; // when you hit the score set below you gain a life
         public int scoreOverflow = 25000; // will only be used if above is true
 
@@ -27,6 +29,8 @@ namespace MyGame
         public bool thin = false; // thiner lines - better for preformance
 
         public bool mutatorMode = false; // chaos
+
+        
         //
 
         public int shipEnable = 1; // -1 equals the points are returning, 0 equals false/disabled, 1 equals true/enabled
@@ -53,7 +57,8 @@ namespace MyGame
         public GameScene()
         {
             AddGameObject(new Ship());
-            AddGameObject(new metorSpawner());
+            AddGameObject(new MetorSpawner());
+            AddGameObject(new backround());
 
             AddGameObject(new Score());
             shipEnable = 1;
