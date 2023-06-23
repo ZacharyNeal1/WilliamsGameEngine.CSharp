@@ -144,7 +144,11 @@ namespace MyGame
                 }
             }
             else pressed = false;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.E))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Q))
+            {
+
+            }
+                if (Keyboard.IsKeyPressed(Keyboard.Key.E))
             {
                 if ((scene.shipEnable == 1 || scene.vaporCount() <1 )&&vaporTimer <1)
                 {

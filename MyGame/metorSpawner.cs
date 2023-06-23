@@ -25,7 +25,7 @@ namespace MyGame
         {
             
 
-            delay = 15000;
+            delay = 10000;
 
 
         }
@@ -37,20 +37,12 @@ namespace MyGame
             {
                 delay -= 0.5f;
                 timer = (int)delay;
-                int count = 4;
-                for (int i = 0; i < count; i ++)
-                switch (new Random().Next(1, 4)) 
-                {
-                    case 1:
-                scene.AddGameObject(new Metor()); break;
-                    case 2:
-                scene.AddGameObject(new Metor1()); break;
-                    case 3:
-                scene.AddGameObject(new Metor2()); break;
-                    case 4:
-                scene.AddGameObject(new Metor3(Conv.ToVect2(Game.RenderWindow.Size) / 2)); break;
+                scene.AddGameObject(new Metor());
+                scene.AddGameObject(new Metor());
+                scene.AddGameObject(new Metor1());
+                scene.AddGameObject(new Metor2());
+                scene.AddGameObject(new Metor3(Conv.ToVect2(Game.RenderWindow.Size) / 2)); 
             }
             }
         }
     }
-}

@@ -21,7 +21,7 @@ namespace MyGame
         //
         public int diff = 1; // 0 - easy | 1 - normal | 2 - hard
 
-        public bool scoreToLiveOverFlow = true; // when you hit the score set below you gain a life
+        public bool scoreToLiveOverFlow = false; // when you hit the score set below you gain a life
         public int scoreOverflow = 25000; // will only be used if above is true
 
         public bool color = false; //invert color
