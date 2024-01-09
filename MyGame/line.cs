@@ -45,10 +45,10 @@ namespace MyGame
 
             if (HasTag("scoreText")) secondLineWidth /= 2;
             if (HasTag("meteor2")) secondLineWidth /= 2;
-            _sprite2.TextureRect = (IntRect)new FloatRect(new Vector2f(a.X, a.Y), new Vector2f(secondLineWidth, distance));
+            _sprite2.TextureRect = (IntRect)new FloatRect(new Vector2f(a.X, a.Y-secondLineWidth/4), new Vector2f(secondLineWidth, distance + secondLineWidth/4));
             _sprite2.Origin = new Vector2f(_sprite2.TextureRect.Width / 2, 0);
             _sprite2.Texture = pixel;
-            _sprite2.Position = new Vector2f(a.X, a.Y);
+            _sprite2.Position = new Vector2f(a.X, a.Y-secondLineWidth/4);
             _sprite2.Rotation = (float)-(MathF.Atan2(b.X - a.X, b.Y - a.Y) * (180 / MathF.PI));
             _sprite2.Color = new Color(c.R, c.G, c.B, (byte)secondLineAlpha);
             if (tag == "laser")

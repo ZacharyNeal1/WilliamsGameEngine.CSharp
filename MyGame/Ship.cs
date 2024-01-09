@@ -42,7 +42,7 @@ namespace MyGame
         List<Vector2> forces = new List<Vector2>();
         Vector2[] pos =
         {
-            new Vector2(0, 0),
+            new Vector2(Game.RenderWindow.Size.X/2, Game.RenderWindow.Size.X/2),
             new Vector2(scale*1.2f, scale * 0.5f),
             new Vector2(0, scale)
         };
